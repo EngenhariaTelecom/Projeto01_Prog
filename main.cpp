@@ -7,39 +7,35 @@
 
 using namespace std;
 
-struct Acoes{
+// tipo de dado criado para armazenar os valores do arquivo de entrada
+struct CotacaoAcoes{
     string data;
     double preco;
 };
 
-
-struct ResultadoUm{
+struct Resultado{
     string data;
-    int dia_com_aumento_preco;
+    int dias_preco_aumentou;
 };
 
-
-struct ResultadoDois{
+struct Contagem{
     string data;
     double probabilidade_dias = 0;
 };
 
-
-
-//função para armazenar os dados de entrada em uma vetor
-vector<Acoes>dados_entrada(string * arq){
+//função que ler os dados de entrada e armazena em um vetor do tipo "CotacaoAcoes"
+vector<CotacaoAcoes>dados_entrada(ifstream * arq){
     string linha;
-    vector<Acoes>info_acoes;
+    vector<CotacaoAcoes>info_acoes;
 
-    while (getline(arq, linha)) {
+    while (getline(*arq, linha)) {
 
         istringstream frase(linha);
-        Acoes dados_acoes;
+        CotacaoAcoes dados_acoes;
 
         frase >> dados_acoes.data >> dados_acoes.preco; // ler a linha do arquivo e armazena a data e o preço na struct criada através do operador de extração ">>"
-        info_acoes.push_back(dados_acoes); //adiciona ao vetor a struct
+        info_acoes.push_back(dados_acoes); //adiciona ao vetor a struct "dados_acoes"
     }
-
     return info_acoes;
 }
 
@@ -55,39 +51,38 @@ int main(int argc, char * argv[]) {
         return errno;
     }
 
-    //criando um vetor do tipo Acoes que foi criado
-    vector<Acoes>info_acoes;
+    // vetor que armazena os dados lidos do arquivo usando a função "dados_entrada" para tal operação
+    vector<CotacaoAcoes>info_acoes = dados_entrada(&arq);
 
-    //cria uma variavel linha para conseguir armazenar a linha lida do arquivo no loop
-    string linha;
-
-    //ler as linhas do arquivo, armazenando em um vetor os precos
-    while (getline(arq, linha)) {
-
-        istringstream frase(linha);
-        Acoes dados_acoes;
-
-        frase >> dados_acoes.data >> dados_acoes.preco; // ler a linha do arquivo e armazena a data e o preço na struct criada através do operador de extração ">>"
-        info_acoes.push_back(dados_acoes); //adiciona ao vetor a struct
-    }
 
     //pilha para armazenar "o dia anterior mais próximo cujo preço de ação seja maior que o dia presente."
-     stack<int>dias_preco_cresce;
-     dias_preco_cresce.push(0);
+    stack<int>dias_preco_crescente;
+    dias_preco_crescente.push(0);
 
+    //vetor para armazenar o dia calculado e a data referente ao calculo para que possamos armazenar os dados dessa pilha em um arquivo de saida
+    vector<Resultado>dia;
 
-     //CORRIGIR O LOOP
-     while (!dias_preco_cresce.empty() && info_acoes[dias_preco_cresce.top()].data) {
-         dias_preco_crescente.pop();
+    for (int i = 0; i < info_acoes.size(); ++i) {
 
-         if (dias_preco_crescente.empty()) {
-             dias_preco_crescente.push(dia_com_aumento_preco = i + 1);
-         } else {
-             dias_preco_crescente.push(1 - dia_com_aumento_preco);
-         }
+        dia.push_back(Resultado());
 
-         dias_preco_crescente.push(dia_com_aumento_preco == i);
-     }
+        while (!dias_preco_crescente.empty() && info_acoes[dias_preco_crescente.top()].preco <= info_acoes[i].preco) {
+            dias_preco_crescente.pop();
+        }
+
+        if (dias_preco_crescente.empty()) {
+            dias_preco_crescente.push(i + 1);
+            dia[i].dias_preco_aumentou = i + 1;
+        } else {
+            dia[i].dias_preco_aumentou = i - dias_preco_crescente.top();
+            dias_preco_crescente.push(1 - dias_preco_crescente.top());
+        }
+
+        dias_preco_crescente.push(i);
+        dia[i].data = info_acoes[i].data;
+
+    }
+
 
     return 0;
 
