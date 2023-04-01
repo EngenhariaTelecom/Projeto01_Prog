@@ -19,9 +19,10 @@ struct Resultado{
 };
 
 struct Contagem{
-    string data;
+    int dia;
     double probabilidade_dias = 0;
 };
+
 
 //função que ler os dados de entrada e armazena em um vetor do tipo "CotacaoAcoes"
 vector<CotacaoAcoes>dados_entrada(ifstream * arq){
@@ -83,6 +84,24 @@ int main(int argc, char * argv[]) {
 
     }
 
+    //vector<Contagem>probabilidade_aumento_preco;
+    vector<Contagem>probabilidade_aumento_preco;
+
+    // loop para calcular as probabilidades de duração de preço ascendente
+
+        int contador = 0;
+        for (int i = 0; i < info_acoes.size(); i++) {
+            int numero = dia[i].dias_preco_aumentou;
+            while (i < dia.size()) {
+                numero = dia[i].dias_preco_aumentou;
+                int digitoAtual = numero % 10;
+                if (digitoAtual == dia[i].dias_preco_aumentou) {
+                    contador++;
+                }
+                int num = numero /= 10;
+                i++;
+            }
+        }
 
     return 0;
 
