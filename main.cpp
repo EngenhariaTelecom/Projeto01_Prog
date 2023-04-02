@@ -5,6 +5,7 @@
 #include <stack>
 #include <vector>
 
+
 using namespace std;
 
 // tipo de dado criado para armazenar os valores do arquivo de entrada
@@ -20,7 +21,7 @@ struct Resultado{
 
 struct Contagem{
     int dia;
-    double probabilidade_dias = 0;
+    double probabilidade_dias;
 };
 
 
@@ -84,24 +85,23 @@ int main(int argc, char * argv[]) {
 
     }
 
-    //vector<Contagem>probabilidade_aumento_preco;
+
     vector<Contagem>probabilidade_aumento_preco;
 
     // loop para calcular as probabilidades de duração de preço ascendente
-
-        int contador = 0;
-        for (int i = 0; i < info_acoes.size(); i++) {
-            int numero = dia[i].dias_preco_aumentou;
-            while (i < dia.size()) {
-                numero = dia[i].dias_preco_aumentou;
-                int digitoAtual = numero % 10;
-                if (digitoAtual == dia[i].dias_preco_aumentou) {
-                    contador++;
-                }
-                int num = numero /= 10;
-                i++;
+    for (int i = 0; i < dia.size(); ++i) {
+        double contador = 0;
+        int qtd_dia = dia[i].dias_preco_aumentou;
+        for (int j = 0; j < dia.size(); ++j) {
+            if (dia[j].dias_preco_aumentou == qtd_dia){
+                contador++;
             }
         }
+        double probabilidade = contador / dia.size();
+        probabilidade_aumento_preco.push_back(Contagem());
+        probabilidade_aumento_preco[i].dia = qtd_dia;
+        probabilidade_aumento_preco[i].probabilidade_dias = probabilidade;
+    }
 
     return 0;
 
