@@ -64,7 +64,8 @@ vector<Resultado>dias_preco_ascendente(vector<CotacaoAcoes>&info_acoes){
             dia[i].dias_preco_aumentou = i + 1;
         } else {
             dia[i].dias_preco_aumentou = i - dias_preco_crescente.top();
-            dias_preco_crescente.push(1 - dias_preco_crescente.top());
+            dias_preco_crescente.push(1 + i - dias_preco_crescente.top());
+
         }
 
         dias_preco_crescente.push(i);
@@ -148,6 +149,7 @@ int main(int argc, char * argv[]) {
     for (auto elemento : dia) {
         arq_dias << elemento.data << " "<< elemento.dias_preco_aumentou << endl;
     }
+
 
     //criando o arquivo de saida "contagem" que contém o calculo da probabilidade de dias que teve o aumento do preço
     ofstream arq_probabilidade("contagem.txt");
