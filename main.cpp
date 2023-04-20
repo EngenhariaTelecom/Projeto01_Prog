@@ -98,7 +98,9 @@ vector<Contagem>calculo_probabilidade(vector<Resultado>&dia){
 
 // Função para ordenar o vetor de probabilidade e remover os valores repetidos
 vector<Contagem>ordena_e_remove_rep(vector<Contagem>&probabilidade_aumento_preco){
-    // usando a função SORT para ordenar o vetor de probabilidade
+    // usando a função SORT para ordenar o vetor de probabilidade, e passado o terceiro argumento para a função, usando função lambda 
+    // a função lambda faz a comparação dos valores a serem ordenados, dessa forma não é obrigatório ter uma função fora para chamá-la, sendo que usamos 
+    //apenas nessa parte do código esse tipo de comparação
     sort(probabilidade_aumento_preco.begin(), probabilidade_aumento_preco.end(), [](const Contagem& a, const Contagem& b) {
         return a.dia < b.dia;
     });
